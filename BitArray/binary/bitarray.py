@@ -4,11 +4,11 @@
 :Date:          2024-03-01
 :Compatibility: Python 3.9
 :License:       MIT
-
 """
 
 from collections.abc import Collection, Generator
 from math import ceil
+from random import Random
 from typing import Any, Optional, TypeVar, Union
 from utility import bit_count, check
 
@@ -148,6 +148,40 @@ class BitArray(Collection):
             if self._get_value(index) == value:
                 return index
         raise ValueError(f'{value} is not in list.')
+
+    def index_of(self, value: bool, count: int) -> int:
+        """Return nth index of value.
+
+        :param value: Value to find.
+        :param count: Count of position to find.
+        """
+        assert isinstance(value, bool), check()
+        assert isinstance(count, int), check()
+        # ----------
+        for index, value_ in enumerate(self):
+            if value == value_:
+                if count == 0:
+                    return index
+                else:
+                    count -= 1
+        raise ValueError(f'Insufficient {value} values in list.')
+
+    def random_index(self, value: bool, random: Random) -> int:
+        """Return the index of any random value within the BitArray.
+
+        :param value: Value to find.
+        :param random: Random generator.
+        """
+        assert isinstance(value, bool), check()
+        assert isinstance(random, Random), check()
+        # ----------
+        count = self.count(value)
+        if count == 0:
+            raise ValueError(f'{value} is not in list.')
+        elif count == 1:
+            return self.index(value)
+        else:
+            return self.index_of(value, random.randint(0, count - 1))
 
     def insert(self, index: int, value: bool):
         """Insert object before index.

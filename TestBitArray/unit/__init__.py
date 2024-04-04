@@ -8,4 +8,3 @@
 """
 
 from ._binary import *
-from ._utility import *
