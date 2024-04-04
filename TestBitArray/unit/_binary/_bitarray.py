@@ -4,9 +4,9 @@
 :Date:          2024-01-01
 :Compatibility: Python 3.9
 :License:       MIT
-
 """
 
+from random import Random
 from unittest import TestCase
 from binary.bitarray import BitArray
 
@@ -357,6 +357,126 @@ class _BitArray(TestCase):
                             pass
                         else:
                             self.fail()
+
+    # Test index_of
+
+    def test_index_of_empty(self):
+        """Test index_of with empty array."""
+        bit_array = BitArray()
+        for value in [False, True]:
+            try:
+                bit_array.index_of(value, 0)
+            except Exception:
+                pass
+            else:
+                self.fail()
+            try:
+                bit_array.index_of(value, 10)
+            except Exception:
+                pass
+            else:
+                self.fail()
+
+    def test_index_of_all_false(self):
+        """Test index_of with all False array."""
+        bit_array = BitArray(20)
+        self.assertEqual(bit_array.index_of(False, 0), 0)
+        self.assertEqual(bit_array.index_of(False, 10), 10)
+        try:
+            bit_array.index_of(True, 0)
+        except Exception:
+            pass
+        else:
+            self.fail()
+        try:
+            bit_array.index_of(True, 10)
+        except Exception:
+            pass
+        else:
+            self.fail()
+
+    def test_index_of_all_true(self):
+        """Test index_of with all True array."""
+        bit_array = BitArray('11111111111111111111')
+        self.assertEqual(bit_array.index_of(True, 0), 0)
+        self.assertEqual(bit_array.index_of(True, 10), 10)
+        try:
+            bit_array.index_of(False, 0)
+        except Exception:
+            pass
+        else:
+            self.fail()
+        try:
+            bit_array.index_of(False, 10)
+        except Exception:
+            pass
+        else:
+            self.fail()
+
+    def test_index_of_mix(self):
+        """Test index_of with a mixed array."""
+        bit_array = BitArray('11001100110011001100110011001100')
+        self.assertEqual(bit_array.index_of(False, 0), 2)
+        self.assertEqual(bit_array.index_of(False, 10), 22)
+        self.assertEqual(bit_array.index_of(True, 0), 0)
+        self.assertEqual(bit_array.index_of(True, 10), 20)
+        try:
+            bit_array.index_of(False, 30)
+        except Exception:
+            pass
+        else:
+            self.fail()
+        try:
+            bit_array.index_of(True, 30)
+        except Exception:
+            pass
+        else:
+            self.fail()
+
+    # Test random_index
+
+    def test_random_index_empty(self):
+        """Test random_index with empty array."""
+        bit_array = BitArray()
+        random = Random()
+        for value in [False, True]:
+            try:
+                bit_array.random_index(value, random)
+            except Exception:
+                pass
+            else:
+                self.fail()
+
+    def test_random_index_all_false(self):
+        """Test random_index with all False array."""
+        bit_array = BitArray(20)
+        random = Random()
+        self.assertGreaterEqual(bit_array.random_index(False, random), 0)
+        try:
+            bit_array.random_index(True, random)
+        except Exception:
+            pass
+        else:
+            self.fail()
+
+    def test_random_index_all_true(self):
+        """Test random_index with all False array."""
+        bit_array = BitArray('1111111111111111111111111111111111111111111')
+        random = Random()
+        self.assertGreaterEqual(bit_array.random_index(True, random), 0)
+        try:
+            bit_array.random_index(False, random)
+        except Exception:
+            pass
+        else:
+            self.fail()
+
+    def test_random_index_mix(self):
+        """Test random_index with a mixed array."""
+        bit_array = BitArray('11001100110011001100110011001100')
+        random = Random()
+        self.assertGreaterEqual(bit_array.random_index(False, random), 0)
+        self.assertGreaterEqual(bit_array.random_index(True, random), 0)
 
     # Test insert.
 
